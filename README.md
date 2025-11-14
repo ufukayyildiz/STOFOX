@@ -168,18 +168,7 @@ My Bucket / photos / 2025 / january /
 ### 1. **Bucket Management**
 
 **Automatic Bucket Discovery:**
-```java
-// Connect with R2 credentials
-R2Config config = R2Config.loadFromFile();
-S3Client client = S3Client.builder()
-    .endpointOverride(config.getEndpoint())
-    .region(Region.of("auto"))
-    .credentialsProvider(...)
-    .build();
 
-// List all buckets
-ListBucketsResponse response = client.listBuckets();
-```
 
 **Sidebar Navigation:**
 - Bucket list auto-updates
@@ -208,13 +197,7 @@ ListBucketsResponse response = client.listBuckets();
 - First page preview
 - File info (pages, size)
 
-**Code:**
-```java
-// Preview window
-JDialog previewDialog = new JDialog();
-JTextArea textArea = new JTextArea(content);
-textArea.setEditable(false);
-textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
 ```
 
 ### 4. **Progress Tracking**
@@ -244,19 +227,7 @@ textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 ### 5. **Auto-Update System**
 
 **Version Check:**
-```java
-// latest.json on R2
-{
-  "version": "1.0.22",
-  "downloadUrl": "https://r2.../STOFOX-1.0.22.pkg",
-  "releaseNotes": "Bug fixes and improvements"
-}
 
-// Comparison
-if (isNewerVersion("1.0.22", currentVersion)) {
-    showUpdateDialog();
-}
-```
 
 **PKG Mode (macOS):**
 ```java
@@ -363,9 +334,6 @@ if (isNewerVersion("1.0.22", currentVersion)) {
 - Cmd+R: Refresh
 - Delete: Delete selected
 - Enter: Open/Download
-
-
-
 
 
 ---
