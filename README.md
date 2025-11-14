@@ -1,7 +1,7 @@
 
 Direct Download link: https://devfox.net/stofox
 
-# STOFOX: The Missing Desktop Client for Cloudflare R2 🦊
+# stoFOX: The Missing Desktop Client for Cloudflare R2 🦊
 
 ## Why Every Developer Needs a Native R2 Client in Their Toolkit
 
@@ -9,13 +9,13 @@ In 2025, cloud storage isn't a luxury—it's a necessity. But finding the right 
 
 Wrestling with terminal commands? Editing rclone config files? Trying to remember AWS CLI syntax every single time? It's exhausting.
 
-That's why we built **STOFOX**.
+That's why we built **stoFOX**.
 
 ---
 
-## 📦 What is STOFOX?
+## 📦 What is stoFOX?
 
-**STOFOX** is a modern, user-friendly desktop application specifically designed for Cloudflare R2 object storage. Written in Java, distributed as a macOS PKG installer, and requiring zero installation thanks to its embedded JRE.
+**stoFOX** is a modern, user-friendly desktop application specifically designed for Cloudflare R2 object storage. Written in Java, distributed as a macOS PKG installer, and requiring zero installation thanks to its embedded JRE.
 
 ### Key Features:
 
