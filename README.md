@@ -186,43 +186,8 @@ ListBucketsResponse response = client.listBuckets();
 - Bucket selection → load contents
 - Quick bucket switching
 
-### 2. **Object Operations**
 
-**Upload:**
-```java
-// Single file
-PutObjectRequest request = PutObjectRequest.builder()
-    .bucket(bucketName)
-    .key(objectKey)
-    .contentType(detectMimeType(file))
-    .build();
-
-// Progress tracking
-RequestBody body = RequestBody.fromFile(file);
-client.putObject(request, body);
-```
-
-**Download:**
-```java
-// Multi-file download
-for (S3Object obj : selectedObjects) {
-    GetObjectRequest request = GetObjectRequest.builder()
-        .bucket(bucketName)
-        .key(obj.key())
-        .build();
-    
-    client.getObject(request, 
-        ResponseTransformer.toFile(localPath));
-}
-```
-
-**Delete:**
-```java
-// 2-step confirmation
-1. Show dialog: "Delete 5 files?"
-2. Red button: "Confirm Delete"
-3. Background deletion with retry
-```
+ 
 
 ### 3. **File Preview**
 
@@ -274,21 +239,7 @@ textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 └────────────────────────────────────┘
 ```
 
-**Technical Implementation:**
-```java
-// Byte-based progress
-long totalBytes = files.stream()
-    .mapToLong(File::length)
-    .sum();
 
-long uploadedBytes = 0;
-for (File file : files) {
-    // Upload with progress callback
-    uploadedBytes += file.length();
-    int percent = (int)((uploadedBytes * 100) / totalBytes);
-    progressBar.setValue(percent);
-}
-```
 
 ### 5. **Auto-Update System**
 
@@ -326,34 +277,8 @@ if (isNewerVersion("1.0.22", currentVersion)) {
 
 ### 6. **Analytics & Error Tracking**
 
-**Mixpanel Integration:**
-```java
-// App launch
-trackEvent("App Launched", {
-    "$os": "Mac OS X",
-    "$app_version": "1.0.21",
-    "os_version": "14.3",
-    "os_arch": "aarch64",
-    "java_version": "17.0.9"
-});
 
-// Geolocation (automatic via IP)
-// Country: United States
-// City: San Francisco
-```
 
-**Error Tracking:**
-```java
-// Uncaught exception handler
-Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-    trackEvent("App Error", {
-        "error_message": e.getMessage(),
-        "error_type": e.getClass().getName(),
-        "$os": System.getProperty("os.name"),
-        "$app_version": getCurrentVersion()
-    });
-});
-```
 
 **Benefits:**
 - ✅ Crash reporting
@@ -363,78 +288,10 @@ Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
 
 ---
 
-## 📊 Performance & Optimization
 
-### 1. **Memory Management**
 
-**Efficient File Handling:**
-```java
-// Streaming upload (large files)
-RequestBody.fromInputStream(
-    new BufferedInputStream(new FileInputStream(file)),
-    file.length()
-);
 
-// No full file load in memory
-```
 
-**UI Threading:**
-```java
-// Background operations
-SwingWorker<Result, Progress> worker = new SwingWorker<>() {
-    @Override
-    protected Result doInBackground() {
-        // Heavy S3 operations
-        return uploadFiles();
-    }
-    
-    @Override
-    protected void done() {
-        // Update UI on EDT
-        refreshTable();
-    }
-};
-```
-
-### 2. **Network Optimization**
-
-**AWS SDK Best Practices:**
-```java
-S3Client client = S3Client.builder()
-    .region(Region.of("auto"))
-    .endpointOverride(r2Endpoint)
-    .credentialsProvider(StaticCredentialsProvider.create(
-        AwsBasicCredentials.create(accessKey, secretKey)
-    ))
-    .httpClientBuilder(NettyNioAsyncHttpClient.builder()
-        .maxConcurrency(50)
-        .connectionTimeout(Duration.ofSeconds(30))
-    )
-    .build();
-```
-
-**Retry Logic:**
-```java
-RetryPolicy retryPolicy = RetryPolicy.builder()
-    .numRetries(3)
-    .backoffStrategy(BackoffStrategy.exponentialDelay())
-    .build();
-```
-
-### 3. **Caching**
-
-**Object List Caching:**
-```java
-// Cache bucket contents
-Map<String, List<S3Object>> bucketCache = new HashMap<>();
-
-// Invalidate on:
-// - Manual refresh
-// - After upload/delete
-// - Auto-refresh timer
-```
-
----
 
 ## 🔐 Security
 
@@ -459,33 +316,10 @@ Map<String, List<S3Object>> bucketCache = new HashMap<>();
 - ✅ No logging of secrets
 - ✅ Secure transmission (HTTPS)
 
-### 2. **Error Handling**
 
-**Graceful Degradation:**
-```java
-try {
-    uploadFile(file);
-} catch (S3Exception e) {
-    if (e.statusCode() == 403) {
-        showError("Access denied. Check credentials.");
-    } else if (e.statusCode() == 404) {
-        showError("Bucket not found.");
-    } else {
-        showError("Upload failed: " + e.getMessage());
-    }
-}
-```
 
-### 3. **Input Validation**
 
-**Sanitization:**
-```java
-// Bucket name validation
-Pattern bucketPattern = Pattern.compile("^[a-z0-9][a-z0-9-]*[a-z0-9]$");
 
-// Object key validation
-String sanitizedKey = key.replaceAll("[^a-zA-Z0-9/_.-]", "_");
-```
 
 ---
 
@@ -499,13 +333,8 @@ String sanitizedKey = key.replaceAll("[^a-zA-Z0-9/_.-]", "_");
 - ✅ Dark/Light mode support (future)
 - ✅ Native-like performance
 
-**Color Palette:**
-```java
-SIDEBAR_COLOR = new Color(55, 58, 81);     // Dark blue-gray
-BG_COLOR = new Color(245, 245, 247);       // Light gray
-PRIMARY_COLOR = new Color(0, 122, 255);    // Blue
-DELETE_COLOR = new Color(255, 59, 48);     // Red
-```
+
+
 
 ### 2. **Icons & Visuals**
 
@@ -535,47 +364,9 @@ DELETE_COLOR = new Color(255, 59, 48);     // Red
 - Delete: Delete selected
 - Enter: Open/Download
 
-**Screen Reader Support:**
-```java
-// Accessible labels
-button.getAccessibleContext().setAccessibleName("Upload File");
-table.getAccessibleContext().setAccessibleDescription("Object list");
-```
 
----
 
-## 🚢 Deployment: GitHub Actions CI/CD
 
-### Automated Release Pipeline:
-
-```yaml
-name: Build and Deploy macOS PKG
-
-on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version (e.g., 1.0.22)'
-        required: true
-
-jobs:
-  build-and-deploy:
-    runs-on: macos-latest
-    steps:
-      - Extract version
-      - Update pom.xml & UpdateChecker.java
-      - Build with Maven
-      - Create macOS icon (iconutil)
-      - jpackage → STOFOX-{version}.pkg
-      - Upload to R2
-      - Create GitHub Release
-```
-
-**Benefits:**
-- ✅ One-click releases
-- ✅ Version sync automation
-- ✅ Consistent builds
-- ✅ Automatic R2 deployment
 
 ---
 
@@ -700,18 +491,7 @@ open STOFOX-latest.pkg
 /Applications/STOFOX.app
 ```
 
-**Developers:**
-```bash
-# Clone repo
-git clone https://github.com/yourusername/stofox
-cd stofox
 
-# Build
-mvn clean package
-
-# Run
-java -jar target/STOFOX.jar
-```
 
 ---
 
