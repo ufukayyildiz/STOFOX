@@ -123,7 +123,7 @@ After installation, open stoFOX from your desktop or Start Menu.
   - **Provider**: Amazon S3 or Cloudflare R2
   - **Access credentials**: Information obtained from your cloud service
 
-![Add Account](docs/images/add-account.png)
+![Add Account](images/add-account.png)
 
 ### 3. Upload Files
 1. Select a **bucket** (storage) from the left side
