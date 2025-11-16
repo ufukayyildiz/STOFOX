@@ -32,19 +32,19 @@ Amazon S3 and Cloudflare R2 offer **very cheap** alternatives for storing your f
 ## 📸 Screenshots
 
 ### Main Screen - See Your Files
-![File List](docs/images/file-list.png)
+![File List](images/file-list.png)
 *All your files at a glance - with size, date, and folder information*
 
 ### Smart Search - Find Everything
-![Search Feature](docs/images/search.png)
+![Search Feature](images/search.png)
 *Search by filename or content - even scans inside PDFs!*
 
 ### Multi-Account Management
-![Account Management](docs/images/accounts.png)
+![Account Management](images/accounts.png)
 *Work, personal, projects - manage all accounts in one program*
 
 ### File Preview
-![File Preview](docs/images/preview.png)
+![File Preview](images/preview.png)
 *Images, PDFs, text files - preview before downloading*
 
 ---
