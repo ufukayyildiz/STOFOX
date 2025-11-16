@@ -1,491 +1,301 @@
+# 🦊 stoFOX - Your Cloud Storage, Now in Your Pocket!
 
-To Download go releases folder https://github.com/ufukayyildiz/stoFOX/releases/tag/V1.0.22
+**Store your files in the cloud, access them from anywhere!**
 
-# stoFOX: The Missing Desktop Client for Cloudflare R2 🦊
+stoFOX is a modern desktop application that lets you **easily manage** cloud storage services like Amazon S3 and Cloudflare R2. Instead of struggling with complex web interfaces, manage your cloud files just like files on your computer!
 
-## Why Every Developer Needs a Native R2 Client in Their Toolkit
-
-In 2025, cloud storage isn't a luxury—it's a necessity. But finding the right tool? That's where the real challenge begins. If you're tired of AWS S3's high costs and want to migrate to Cloudflare R2's affordable storage, you'll hit a roadblock: **R2 doesn't have an official desktop client**.
-
-Wrestling with terminal commands? Editing rclone config files? Trying to remember AWS CLI syntax every single time? It's exhausting.
-
-That's why we built **stoFOX**.
+![stoFOX Main Screen](docs/images/main-screen.png)
 
 ---
 
-## 📦 What is stoFOX?
+## 🌟 Why stoFOX?
 
-**stoFOX** is a modern, user-friendly desktop application specifically designed for Cloudflare R2 object storage. Written in Java, distributed as a macOS PKG installer, and requiring zero installation thanks to its embedded JRE.
+### 💰 Save Your Money
+Amazon S3 and Cloudflare R2 offer **very cheap** alternatives for storing your files in the cloud. Using these services with stoFOX:
+- **10x cheaper** storage than Google Drive
+- **20x cheaper** file sharing than Dropbox
+- **Unlimited** storage for just a few dollars per month
 
-### Key Features:
+### 🚀 Fast and Easy
+- **Drag-and-drop** file uploads
+- Manage all your accounts **in one place**
+- Upload your folder structure **as-is**
+- Search files in **seconds**
 
-✅ **Zero Dependencies**: One-click installation with embedded JRE  
-✅ **Explorer-Style Interface**: Familiar experience like Windows Explorer or macOS Finder  
-✅ **Fast File Operations**: Upload, download, delete, preview—all in a few clicks  
-✅ **Folder Upload**: Bulk upload preserving folder hierarchies  
-✅ **Auto-Update**: New versions automatically checked and installed  
-✅ **Analytics**: Mixpanel integration for usage metrics and error tracking  
-✅ **Modern UI**: Professional look with FlatLaf IntelliJ theme
-
----
-
-## 🎯 The Problem: R2's Missing Link
-
-Cloudflare R2 offers a fantastic alternative to AWS S3:
-- **Zero egress fees** (no data transfer costs!)
-- **S3-compatible API** (works with existing tools)
-- **Global distribution** (Cloudflare's edge network)
-
-But it has one problem: **No user-friendly desktop interface**.
-
-### Current Solutions & Their Issues:
-
-**1. Cloudflare Dashboard**
-- ❌ Web-based (slow, limited)
-- ❌ Bulk operations difficult
-- ❌ No folder upload support
-
-**2. AWS CLI / Rclone**
-- ❌ Requires terminal knowledge
-- ❌ Complex config files
-- ❌ Difficult debugging
-
-
-
-### STOFOX's Solution:
-
-✅ **Native Desktop App**: Optimized for macOS  
-✅ **R2-First Design**: Only the features you need  
-✅ **Open Source**: Open to community contributions  
-✅ **Free**: Zero cost, zero ads
+### 🔒 Secure and Professional
+- Your files are stored on **secure servers** of major companies (Amazon, Cloudflare)
+- **3-step protection** against accidental deletion
+- Multiple account support to separate **work and personal** files
 
 ---
 
-## 🏗️ Architecture: How It Works
+## 📸 Screenshots
 
-STOFOX is built with modern software development principles:
+### Main Screen - See Your Files
+![File List](docs/images/file-list.png)
+*All your files at a glance - with size, date, and folder information*
 
-### 1. **Tech Stack**
+### Smart Search - Find Everything
+![Search Feature](docs/images/search.png)
+*Search by filename or content - even scans inside PDFs!*
 
-```
-┌─────────────────────────────────────┐
-│     Java 17 (Temurin JRE)          │
-├─────────────────────────────────────┤
-│  AWS SDK for Java 2.20.0 (S3 API) │
-├─────────────────────────────────────┤
-│    FlatLaf UI Framework 3.5.2      │
-├─────────────────────────────────────┤
-│     Mixpanel Analytics 1.5.3       │
-└─────────────────────────────────────┘
-```
+### Multi-Account Management
+![Account Management](docs/images/accounts.png)
+*Work, personal, projects - manage all accounts in one program*
 
-**Why Java?**
-- ✅ Cross-platform compatibility
-- ✅ Mature S3 SDK ecosystem
-- ✅ Memory-safe and secure
-- ✅ JRE embedding support (jpackage)
-
-**Why AWS SDK?**
-- ✅ R2's S3-compatible API
-- ✅ Battle-tested codebase
-- ✅ Async/sync operation support
-- ✅ Automatic retry mechanism
-
-### 2. **UI/UX Philosophy**
-
-STOFOX's interface is designed with the **"familiar yet modern"** principle:
-
-**Hierarchical Navigation:**
-```
-My Bucket / photos / 2025 / january / 
-[← Easy navigation with clickable breadcrumbs]
-```
-
-**Dual-Pane Layout:**
-```
-┌─────────────┬───────────────────────────┐
-│  SIDEBAR    │    MAIN PANEL             │
-│             │                           │
-│ • Settings  │  ┌─────────────────────┐  │
-│ • Refresh   │  │ Name       │  Size  │  │
-│ • Check     │  ├─────────────────────┤  │
-│   Updates   │  │ 📁 backups │ -      │  │
-│ • About     │  │ 📄 data.json│ 2.4KB │  │
-│             │  └─────────────────────┘  │
-│ BUCKETS:    │                           │
-│ • cdn0      │  [Upload] [Download] [...] │
-│ • food360   │                           │
-│ • library   │                           │
-│             │                           │
-│ v1.0.21     │                           │
-└─────────────┴───────────────────────────┘
-```
-
-**Context Menus:**
-- Right-click → Download / Delete / View
-- Multi-select support (Cmd+A on macOS)
-- Keyboard shortcuts
-
-### 3. **Core Operations**
-
-**Upload Flow:**
-```java
-1. User selects file/folder
-2. Background thread starts
-3. Progress dialog shows:
-   - Overall: [████████░░] 80% (400MB / 500MB)
-   - Files: 8 / 10 uploaded
-4. S3 SDK uploads to R2
-5. Table auto-refreshes
-```
-
-**Folder Upload:**
-```java
-1. Scan directory tree (with symlink protection)
-2. Preserve folder structure
-3. Upload files with proper S3 keys:
-   - /folder/subfolder/file.txt
-4. Progress tracking per file
-```
-
-**Auto-Update System:**
-```java
-1. Check R2 bucket for latest.json
-2. Compare versions (semver)
-3. If newer:
-   - PKG mode: Download installer to ~/Downloads
-   - JAR mode: Replace JAR, restart app
-4. Show progress with byte tracking
-```
+### File Preview
+![File Preview](docs/images/preview.png)
+*Images, PDFs, text files - preview before downloading*
 
 ---
 
-## 🚀 Features: Deep Dive
+## ✨ Features
 
-### 1. **Bucket Management**
+### 🔍 Powerful Search
+- **Search by filename**: Where did I put that photo? Find it instantly!
+- **Content search**: Search for words inside PDF and text files
+- **Filtered search**: Only images, only PDFs - filter as you like
+- **Search across all accounts**: Find files even if you forgot which account!
 
-**Automatic Bucket Discovery:**
+### 📁 Folder Management
+- **Folder upload**: Upload entire folders as-is
+- **Browse subfolders**: Navigate through folder hierarchies
+- **Folder statistics**: See file count, total size
+- **Bulk delete**: Delete entire folders at once (with 3-step confirmation!)
 
+### 🎨 File Preview
+- **Images**: JPG, PNG, GIF - view everything in the app
+- **PDFs**: Navigate page by page, zoom in
+- **Text files**: TXT, JSON, code files - read and check
 
-**Sidebar Navigation:**
-- Bucket list auto-updates
-- Bucket selection → load contents
-- Quick bucket switching
+### 🛡️ Security
+- **3-step deletion**: Protection against accidental deletion
+  1. "Are you sure?" question
+  2. 3-second countdown (you can cancel!)
+  3. Final confirmation - now it's really deleting
+- **File encryption**: Your files are safe on secure servers
 
+### ⚡ Performance
+- **Unlimited files**: Thousands, tens of thousands of files - no problem
+- **Fast uploads**: Track large files with progress bar
+- **Multiple downloads**: Download multiple files simultaneously
+- **Cancellable operations**: Started by mistake? Cancel it!
 
- 
-
-### 3. **File Preview**
-
-**Supported Types:**
-
-**Images:**
-- JPG, PNG, GIF, WebP
-- In-app preview with scaling
-- Full-screen mode
-
-**Text:**
-- TXT, JSON, XML, MD
-- Syntax highlighting (future)
-- UTF-8 support
-
-**PDF:**
-- Apache PDFBox integration
-- First page preview
-- File info (pages, size)
-
-
-```
-
-### 4. **Progress Tracking**
-
-**Dual Progress Bar System:**
-
-```
-┌────────────────────────────────────┐
-│  Uploading Files...                │
-├────────────────────────────────────┤
-│                                    │
-│  Overall Progress:                 │
-│  [████████████████░░] 80%          │
-│  400 MB / 500 MB                   │
-│                                    │
-│  Files: 8 / 10 uploaded            │
-│                                    │
-│  Current: large-video.mp4          │
-│  [████████████░░░░░░] 60%          │
-│                                    │
-│            [Cancel]                │
-└────────────────────────────────────┘
-```
-
-
-
-### 5. **Auto-Update System**
-
-**Version Check:**
-
-
-**PKG Mode (macOS):**
-```java
-1. Download PKG to ~/Downloads
-2. Show notification
-3. Open Finder to Downloads folder
-4. User double-clicks installer
-5. macOS handles installation
-```
-
-**JAR Mode (Development):**
-```java
-1. Download new JAR
-2. Replace current JAR
-3. Restart application
-4. Continue seamlessly
-```
-
-### 6. **Analytics & Error Tracking**
-
-
-
-
-**Benefits:**
-- ✅ Crash reporting
-- ✅ User behavior insights
-- ✅ Performance metrics
-- ✅ Geographic distribution
+### 🌍 Multi-Account
+- **Unlimited accounts**: Add as many accounts as you want
+- **Quick switch**: Switch between accounts with one click
+- **Amazon S3**: World's most popular cloud storage
+- **Cloudflare R2**: 90% cheaper alternative to S3!
 
 ---
 
+## 💾 Download and Installation
 
+### Windows Users
+1. [Download Latest Version](../../releases/latest) - Download `stoFOX-Setup.msi` file
+2. Double-click the downloaded file
+3. Follow the installation wizard
+4. **That's it!** No need to install Java!
 
+### macOS Users (Intel and M1/M2/M3)
+1. [Download Latest Version](../../releases/latest) - Download `stoFOX.pkg` file
+2. Double-click the downloaded file
+3. Follow the installation wizard
+4. **That's it!** No need to install Java!
 
-
-
-## 🔐 Security
-
-### 1. **Credential Management**
-
-**Secure Storage:**
-```java
-// Config file: r2client-config.json
-{
-    "accountId": "abc123",
-    "accessKeyId": "R2_ACCESS_KEY",
-    "secretAccessKey": "R2_SECRET_KEY",
-    "selectedBucket": "my-bucket"
-}
-
-// Permissions: 600 (read/write owner only)
-```
-
-**Best Practices:**
-- ✅ No hardcoded credentials
-- ✅ Platform-specific storage paths
-- ✅ No logging of secrets
-- ✅ Secure transmission (HTTPS)
-
-
-
-
-
+### Linux Users
+1. [Download Latest Version](../../releases/latest) - Download `stoFOX.jar` file
+2. Make sure Java 17 is installed
+3. In terminal: `java -jar stoFOX.jar`
 
 ---
 
-## 🎨 UI/UX Design Decisions
+## 🚀 Quick Start
 
-### 1. **Theme: FlatLaf IntelliJ**
+### 1. Open the Program
+After installation, open stoFOX from your desktop or Start Menu.
 
-**Why FlatLaf?**
-- ✅ Modern, flat design
-- ✅ Cross-platform consistency
-- ✅ Dark/Light mode support (future)
-- ✅ Native-like performance
+### 2. Add an Account
+- Click **"Settings"** button from left menu
+- Click **"Add Account"** button
+- Enter your account information:
+  - **Account name**: E.g., "My Work Account", "Personal Photos"
+  - **Provider**: Amazon S3 or Cloudflare R2
+  - **Access credentials**: Information obtained from your cloud service
 
+![Add Account](docs/images/add-account.png)
 
+### 3. Upload Files
+1. Select a **bucket** (storage) from the left side
+2. Click **"Upload"** button
+3. Select your file or **drag-and-drop** it
+4. Upload starts automatically!
 
-
-### 2. **Icons & Visuals**
-
-**Custom STOFOX Logo:**
-- 🦊 Fox mascot (stofox-logo.png)
-- Friendly and memorable
-- Used in:
-  - App icon (stofox.icns)
-  - MainWindow title bar
-  - PKG installer
-
-**File Type Icons:**
-```
-📁 Folders
-📄 Documents
-🖼️ Images
-📦 Archives
-🎵 Audio
-🎬 Video
-```
-
-### 3. **Accessibility**
-
-**Keyboard Shortcuts:**
-- Cmd+A: Select all
-- Cmd+R: Refresh
-- Delete: Delete selected
-- Enter: Open/Download
-
-
----
-
-## 📈 Roadmap: Future Plans
-
-### v1.1 (Q1 2025)
-- [ ] Windows PKG support
-- [ ] Linux AppImage
-- [ ] Dark mode toggle
-- [ ] Multi-bucket operations
-
-### v1.2 (Q2 2025)
-- [ ] Drag & drop upload
-- [ ] File search & filtering
-- [ ] Shareable public links
-- [ ] Bandwidth throttling
-
-### v1.3 (Q3 2025)
-- [ ] Encryption at rest
-- [ ] Custom metadata editor
-- [ ] Lifecycle policies UI
-- [ ] Team sharing features
-
-### v2.0 (Q4 2025)
-- [ ] Cloud sync (like Dropbox)
-- [ ] Mobile companion app
-- [ ] CLI tool
-- [ ] API documentation
+### 4. Search Files
+1. Click **"Search"** button from left menu
+2. Type the word you want to search
+3. Select your desired filters:
+   - Search in all accounts?
+   - Only PDFs?
+   - Search in file contents?
+4. Click **"Search"** button
+5. View, download, or delete results!
 
 ---
 
 ## 💡 Use Cases
 
-### 1. **Static Website Hosting**
-```
-Upload HTML/CSS/JS → R2 bucket → Cloudflare CDN → Global users
-```
+### 📷 For Photographers
+"My wedding photos are 100 GB - won't fit on Google Drive!"
+→ With Cloudflare R2, pay **only $2-3 per month**!
 
-### 2. **Media Library**
-```
-Upload photos/videos → Preview in STOFOX → Share via R2 URLs
-```
+### 🎬 For Video Editors
+"My old project files are filling up my computer!"
+→ Upload to S3 with stoFOX, archive them, get them back when needed!
 
-### 3. **Backup Solution**
-```
-Daily backups → Folder upload → Version control → Disaster recovery
-```
+### 📁 For Office Workers
+"Work files at home, home files at work - what a mess!"
+→ Open two separate accounts, manage both in stoFOX!
 
-### 4. **Asset Delivery**
-```
-Game assets → R2 storage → Low latency downloads → Happy players
-```
+### 🎓 For Students
+"I want to backup my thesis files, projects, assignments!"
+→ Store safely on S3, access for lifetime!
 
 ---
 
-## 🤝 Contributing
+## 🔧 What are Amazon S3 and Cloudflare R2?
 
-STOFOX is an open-source project! We welcome your contributions:
+### Amazon S3 (Simple Storage Service)
+Amazon's cloud storage service. The world's most reliable and widely used storage system.
 
-**GitHub:** [github.com/yourusername/stofox]
+**Price Example:**
+- 1 TB storage: ~$23/month
+- First 5 TB download: Free
+- After that: $0.09/GB
 
-**Contribution Areas:**
-- 🐛 Bug reports
-- 💡 Feature requests
-- 🔧 Pull requests
-- 📖 Documentation
-- 🌍 Translations
+**Who Uses It?**
+Netflix, Airbnb, NASA, and many major companies worldwide!
 
----
+### Cloudflare R2
+Fully compatible with S3 but **much cheaper** alternative!
 
-## 🎓 Lessons Learned
+**Price Example:**
+- 1 TB storage: ~$15/month
+- **Download fee: ZERO!** 🎉
+- 10 million file operations/month: Free
 
-Lessons we learned while developing STOFOX:
+**Why Cheaper?**
+Cloudflare doesn't charge for downloads - only for storage!
 
-**1. Modern Java != Old Java**
-- Swing is still powerful (with FlatLaf)
-- JRE embedding is great (jpackage)
-- AWS SDK v2 is very clean
+### Comparison
 
-**2. UX > Features**
-- User-friendly interface beats everything
-- Progress bars build trust
-- Error messages must be clear
-
-**3. Automation Wins**
-- GitHub Actions saves time
-- Auto-update increases user satisfaction
-- Analytics accelerates development
-
-**4. R2 is Underrated**
-- Cheaper than S3
-- S3-compatible (easy migration)
-- Cloudflare network = fast
+| Feature | Google Drive | Dropbox | S3 (1TB) | R2 (1TB) |
+|---------|--------------|---------|----------|----------|
+| Monthly Cost | $10 | $12 | $23 | $15 |
+| Storage Limit | 2 TB | 2 TB | Unlimited | Unlimited |
+| Download Fee | - | - | Yes | NO! |
+| API Access | Limited | Limited | Full | Full |
+| stoFOX Support | ❌ | ❌ | ✅ | ✅ |
 
 ---
 
-## 🏁 Conclusion
+## 🎯 Frequently Asked Questions
 
-**STOFOX** fills the missing piece in the Cloudflare R2 ecosystem: **a user-friendly desktop client**.
+### ❓ "Is cloud storage secure?"
+**Yes!** Amazon and Cloudflare are among the world's largest tech companies. Your files are:
+- Stored encrypted
+- Backed up in multiple locations
+- Only accessible by you
 
-If you:
-- ✅ Are escaping AWS S3 costs
-- ✅ Are tired of terminal commands
-- ✅ Want a modern UI
-- ✅ Love free and open source
+### ❓ "Is installation difficult?"
+**No!** One-click installation - you don't even need to install Java!
 
-**STOFOX is for you!**
+### ❓ "Is it paid?"
+stoFOX is **completely free**! You only pay for the cloud storage you use (S3 or R2) - which is very cheap!
 
----
+### ❓ "Will my files get lost?"
+**No!** Amazon and Cloudflare guarantee 99.999999999% (11 nines!) data durability. Your files are virtually impossible to lose!
 
-## 📥 Get Started Now
+### ❓ "Can I use it without internet?"
+You need internet to view and download files. But you can download files to your computer for offline work.
 
-**macOS Users:**
-```bash
-# Download latest PKG
-curl -O https://r2client.brixyazilim.com/STOFOX-latest.pkg
+### ❓ "How many accounts can I add?"
+**Unlimited!** Work, home, archive - add as many accounts as you want, let stoFOX manage them all!
 
-# Install
-open STOFOX-latest.pkg
-
-# Launch
-/Applications/STOFOX.app
-```
-
-
+### ❓ "Is there a file size limit?"
+stoFOX itself has no limit - but S3 and R2 have limits:
+- Single file: Up to 5 TB (!)
+- Total storage: Unlimited
 
 ---
 
-## 🙏 Acknowledgments
+## 🛠️ Support and Help
 
-Technologies that made STOFOX possible:
+### 📧 Contact
+Having issues? Have suggestions?
+- [Open an Issue](../../issues) - Get support on GitHub
+- [DevFox](https://devfox.net) - Developer website
 
-- ☁️ Cloudflare R2
-- ☕ OpenJDK (Temurin)
-- 🎨 FlatLaf
-- 📊 Mixpanel
-- 🔧 AWS SDK
-- 🦊 And you, our community!
-
----
-
-**Questions? Feedback?**
-
-📧 Email: ufuk@devfox.net
-
-
-**Happy Storing! 🦊**
+### 📚 Help Resources
+- [Opening Amazon S3 Account](https://aws.amazon.com/s3/)
+- [Opening Cloudflare R2 Account](https://www.cloudflare.com/products/r2/)
+- [Video Tutorials](#) - Coming soon!
 
 ---
 
-*Note: STOFOX is not an official Cloudflare product. It's an independent open-source project compatible with Cloudflare R2.*
+## 🎁 Bonus Features
 
+### 🔄 Auto-Update
+The program checks for new versions every time you open it. When new features are released:
+- Windows/macOS: Auto-update suggestion
+- One-click update
+- None of your settings are lost!
 
+### 🎨 Modern Design
+- Eye-friendly light theme
+- Large, readable fonts
+- Colorful icons and visuals
+- Quick access menus
 
-Client for Cloudflare R2
+### ⌨️ Keyboard Shortcuts
+- **Ctrl/Cmd + U**: Quick upload
+- **Ctrl/Cmd + F**: Open search
+- **Delete**: Delete selected file
+- **Enter**: Open/preview file
 
-https://r2client.brixyazilim.com/STOFOX-latest.pkg
+---
+
+## 🌟 Coming Soon
+
+- [ ] 🌙 Dark theme
+- [ ] 🔗 Create sharing links
+- [ ] 📊 Storage statistics and charts
+- [ ] 🗂️ Bulk file operations
+- [ ] 📱 Mobile app
+
+---
+
+## 📄 License
+
+stoFOX is open source and free. Use it for personal or commercial purposes - completely free!
+
+---
+
+## 💖 Thank You
+
+Thank you for using stoFOX! If you like it:
+- ⭐ Star it on GitHub
+- 🐦 Recommend to your friends
+- 💬 Send feedback
+
+**by [DevFox](https://devfox.net)** 🦊
+
+---
+
+<div align="center">
+  
+### 📥 [Download Now and Start Using!](../../releases/latest)
+
+**Your cloud storage, now in your pocket!** 🚀
+
+</div>
