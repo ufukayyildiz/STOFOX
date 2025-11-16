@@ -50,10 +50,7 @@ But it has one problem: **No user-friendly desktop interface**.
 - ❌ Complex config files
 - ❌ Difficult debugging
 
-**3. Cyberduck / CloudBerry**
-- ❌ Not optimized for R2
-- ❌ Unnecessary S3 features
-- ❌ Paid versions
+
 
 ### STOFOX's Solution:
 
